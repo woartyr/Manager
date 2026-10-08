@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>ACTOR OS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0b0f;color:#f7f7f8;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+main{max-width:720px;margin:auto;padding:env(safe-area-inset-top) 18px 110px}
+header{padding:28px 0 18px}h1{font-size:34px;margin:0 0 5px}h2{font-size:22px;margin:0 0 12px}.muted{color:#9b9ba5}.card{background:#17171d;border:1px solid #292932;border-radius:22px;padding:18px;margin:14px 0}.hero{background:linear-gradient(145deg,#20202a,#121218)}.eyebrow{font-size:12px;letter-spacing:1.2px;color:#9b9ba5;font-weight:700}.big{font-size:25px;font-weight:750;line-height:1.2}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric{background:#17171d;border:1px solid #292932;border-radius:18px;padding:15px}.metric b{font-size:24px;display:block;margin-top:6px}.btn{border:0;border-radius:14px;padding:13px 16px;background:#f4f4f5;color:#0b0b0f;font-weight:750;font-size:15px}.btn.secondary{background:#282831;color:#fff}.row{display:flex;gap:10px;align-items:center}.task{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid #292932}.task:last-child{border-bottom:0}.check{width:24px;height:24px;border:2px solid #666;border-radius:50%;flex:0 0 auto}.done .check{background:#f4f4f5;border-color:#f4f4f5}.done .check:after{content:"✓";color:#111;display:block;text-align:center;font-weight:900}.done .tasktext{text-decoration:line-through;color:#777}.tabs{position:fixed;bottom:0;left:0;right:0;padding:10px max(12px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));background:rgba(12,12,16,.94);backdrop-filter:blur(20px);display:flex;justify-content:space-around;border-top:1px solid #292932}.tabs button{background:none;border:0;color:#999;font-weight:700}.tabs button.active{color:#fff}.screen{display:none}.screen.active{display:block}textarea{width:100%;min-height:75px;background:#101015;border:1px solid #33333d;color:white;border-radius:15px;padding:12px;font:inherit;resize:vertical}.chat{max-height:58vh;overflow:auto}.msg{padding:12px 14px;border-radius:16px;margin:9px 0;max-width:90%;white-space:pre-wrap}.ai{background:#20202a}.user{background:#34344a;margin-left:auto}.schedule{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid #292932}.time{width:95px;color:#999;font-size:13px}.pill{font-size:11px;color:#aaa;margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+<section id="today" class="screen active">
+<header><div class="eyebrow">ACTOR OS</div><h1>Сьогодні</h1><div class="muted">Операційна система власника</div></header>
+<div class="card hero"><div class="eyebrow">ГОЛОВНИЙ ФІЛЬТР</div><div class="big" style="margin:8px 0">Гроші → Система → Масштаб</div><div class="muted">Не будь зайнятим. Будь результативним.</div></div>
+<div class="card"><div class="eyebrow">ЩО РОБИТИ ЗАРАЗ</div><h2 id="nowTask">Обробити 5 найгарячіших заявок</h2><div class="muted">30 хв · Продажі · прямий вплив на виручку</div><br><button class="btn" onclick="completeCurrent()">Виконано</button> <button class="btn secondary" onclick="ask('Що мені робити зараз?')">Запитати AI-CEO</button></div>
+<div class="grid"><div class="metric"><span class="muted">CEO SCORE</span><b id="score">0%</b></div><div class="metric"><span class="muted">Учні</span><b>101 / 201</b></div></div>
+<div class="card"><div class="eyebrow">ЦІЛЬ ТИЖНЯ</div><h2>Заповнення груп і збільшення потоку заявок</h2></div>
+</section>
+
+<section id="ceo" class="screen">
+<header><div class="eyebrow">AI-CEO</div><h1>Твій стратег</h1><div class="muted">Питай, коли завис.</div></header>
+<div class="card"><div id="chat" class="chat"><div class="msg ai">Я твій AI-CEO. Напиши: «Що мені робити зараз?» або опиши проблему.</div></div>
+<textarea id="input" placeholder="Напиши AI-CEO..."></textarea><br><br><button class="btn" onclick="send()">Відправити</button></div>
+</section>
+
+<section id="tasks" class="screen">
+<header><div class="eyebrow">ВИКОНАННЯ</div><h1>Задачі</h1></header>
+<div class="card" id="taskList"></div>
+<div class="card"><input id="newTask" style="width:100%;padding:13px;border-radius:13px;background:#101015;border:1px solid #333;color:white" placeholder="Нова задача..."><br><br><button class="btn" onclick="addTask()">Додати</button></div>
+</section>
+
+<section id="business" class="screen">
+<header><div class="eyebrow">CEO</div><h1>Школа Акторів</h1></header>
+<div class="grid"><div class="metric"><span class="muted">Учні</span><b>101</b></div><div class="metric"><span class="muted">Ціль</span><b>201</b></div><div class="metric"><span class="muted">Фокус</span><b>Заявки</b></div><div class="metric"><span class="muted">Напрям</span><b>Масштаб</b></div></div>
+<div class="card"><h2>CEO-фільтр</h2><p>💰 Чи створює це гроші?</p><p>⚙️ Чи створює це систему?</p><p>🚀 Чи створює це масштаб?</p></div>
+<div class="card"><h2>Траєкторія</h2><p>101 → 201 → 500 → 1 000 → 5 000+ учнів</p><p class="muted">Спочатку доводимо одну систему до повторюваності, потім масштабуємо.</p></div>
+</section>
+
+<section id="day" class="screen">
+<header><div class="eyebrow">РОЗКЛАД</div><h1>Мій день</h1></header>
+<div class="card" id="schedule"></div>
+</section>
+</main>
+<nav class="tabs">
+<button class="active" onclick="show('today',this)">⚡<br>Сьогодні</button>
+<button onclick="show('ceo',this)">🤖<br>AI-CEO</button>
+<button onclick="show('tasks',this)">✅<br>Задачі</button>
+<button onclick="show('business',this)">🏢<br>Бізнес</button>
+<button onclick="show('day',this)">📅<br>День</button>
+</nav>
+<script>
+const API_URL = localStorage.getItem('actorOSBackend') || '';
+let tasks = JSON.parse(localStorage.getItem('actorTasks')||'[]');
+let done=Number(localStorage.getItem('actorDone')||0);
+const defaults=[
+"Обробити 5 найгарячіших заявок","Зробити один рекламний креатив","Написати 5 потенційним клієнтам",
+"Передати одну операційну задачу адміністратору","Зробити одну дію для масштабування","30 хв роботи над творчим проєктом"];
+if(!tasks.length) tasks=defaults.map(x=>({t:x,d:false}));
+function save(){localStorage.setItem('actorTasks',JSON.stringify(tasks));localStorage.setItem('actorDone',done);renderTasks();document.getElementById('score').textContent=Math.round(tasks.filter(x=>x.d).length/tasks.length*100)+'%'}
+function renderTasks(){document.getElementById('taskList').innerHTML=tasks.map((x,i)=>`<div class="task ${x.d?'done':''}" onclick="toggle(${i})"><div class="check"></div><div class="tasktext">${escapeHtml(x.t)}</div></div>`).join('')}
+function toggle(i){tasks[i].d=!tasks[i].d;save()}
+function addTask(){let x=document.getElementById('newTask').value.trim();if(x){tasks.push({t:x,d:false});document.getElementById('newTask').value='';save()}}
+function completeCurrent(){let i=tasks.findIndex(x=>!x.d);if(i>=0){tasks[i].d=true;save();document.getElementById('nowTask').textContent='Готово. Наступна задача — '+(tasks.find(x=>!x.d)?.t||'усі задачі закриті.');}}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function show(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}
+function ask(x){document.getElementById('input').value=x;show('ceo',document.querySelectorAll('.tabs button')[1]);send()}
+async function send(){
+ let input=document.getElementById('input'), text=input.value.trim();if(!text)return;
+ let chat=document.getElementById('chat');chat.innerHTML+=`<div class="msg user">${escapeHtml(text)}</div>`;input.value='';
+ if(!API_URL){chat.innerHTML+=`<div class="msg ai">AI-CEO ще не підключений. Додай адресу свого backend у налаштування застосунку або розгорни backend із комплекту ACTOR OS.</div>`;chat.scrollTop=chat.scrollHeight;return}
+ chat.innerHTML+=`<div class="msg ai" id="loading">Думаю...</div>`;
+ try{
+  let r=await fetch(API_URL+'/api/ceo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,context:{students:101,targetStudents:201,weeklyGoal:'Заповнення груп і збільшення потоку заявок',schedule:'Вт-Сб 11:00-14:00 репетиція; Вт/Чт/Сб 14:30-16:30 тренування; 17:00-20:00 репетиція/вистава; неділя — дружина/відновлення; понеділок — особистий час'}})});
+  let j=await r.json();document.getElementById('loading').textContent=j.answer||'Немає відповіді.';
+ }catch(e){document.getElementById('loading').textContent='Не вдалося підключитися до AI-CEO.'}
+ chat.scrollTop=chat.scrollHeight
+}
+document.getElementById('schedule').innerHTML=[
+['06:50','Підйом + старт дня','Особисте'],['09:00','CEO-блок','Бізнес'],['11:00–14:00','Репетиція','Театр'],['14:30–16:30','Тренування','Тіло'],['17:00–20:00','Репетиція / вистава','Театр'],['20:00–21:00','Вечеря + відновлення','Відпочинок'],['21:00–21:40','CEO / творчість','Стратегія'],['21:40+','Стоп. Особистий час','Відновлення']
+].map(x=>`<div class="schedule"><div class="time">${x[0]}</div><div><b>${x[1]}</b><div class="pill">${x[2]}</div></div></div>`).join('');
+renderTasks();save();
+</script>
+</body>
+</html>
