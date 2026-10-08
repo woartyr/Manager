@@ -77,7 +77,6 @@ async function send(){
  chat.innerHTML+=`<div class="msg ai" id="loading">Думаю...</div>`;
  try{
   let r=await fetch(API_URL+'/api/ceo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,context:{students:101,targetStudents:201,weeklyGoal:'Заповнення груп і збільшення потоку заявок',schedule:'Вт-Сб 11:00-14:00 репетиція; Вт/Чт/Сб 14:30-16:30 тренування; 17:00-20:00 репетиція/вистава; неділя — дружина/відновлення; понеділок — особистий час'}})});
-  let r=await fetch(...);
 let j=await r.json();
 document.getElementById('loading').textContent=j.answer||('Помилка: '+(j.error||'невідома помилка'));
  }catch(e){document.getElementById('loading').textContent='Не вдалося підключитися до AI-CEO.'}
