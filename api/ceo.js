@@ -90,7 +90,7 @@ export default async function handler(req, res) {
     console.error(error);
 
     return res.status(500).json({
-      error: "AI request failed"
+      error: error.message || "AI request failed"
     });
   }
 }
