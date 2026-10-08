@@ -55,7 +55,7 @@ header{padding:28px 0 18px}h1{font-size:34px;margin:0 0 5px}h2{font-size:22px;ma
 <button onclick="show('day',this)">📅<br>День</button>
 </nav>
 <script>
-const API_URL = localStorage.getItem('actorOSBackend') || '';
+const API_URL = 'https://manager-flame-six.vercel.app';
 let tasks = JSON.parse(localStorage.getItem('actorTasks')||'[]');
 let done=Number(localStorage.getItem('actorDone')||0);
 const defaults=[
